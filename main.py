@@ -115,11 +115,13 @@ class Window(Frame):
         
     #edit -> draw Line of Interest (event)
     def extractCoord(self, event):
+        #search if any line has already being made
         try:
             self.clone = cv2.imread('images\copy.png').copy()
         except:
             self.clone = cv2.imread('images\preview.png').copy()
 
+        #first dot
         if self.counter < 1:
             x = int(self.canvas.canvasx(event.x))
             y = int(self.canvas.canvasy(event.y))
@@ -128,6 +130,7 @@ class Window(Frame):
             self.pos.append(self.canvas.create_line(x, y - 5, x, y + 5, fill="red", tags="crosshair"))
             self.coor = [(x,y)]
             self.counter += 1
+        #second dot
         else:
             x = int(self.canvas.canvasx(event.x))
             y = int(self.canvas.canvasy(event.y))
@@ -137,21 +140,21 @@ class Window(Frame):
             self.coor.append((x,y))
             self.counter = 0
 
-            #save all line coor
+            #save all (x,y) line to allCoor variable
             self.allCoor.append(self.coor)
             #draw line
             cv2.line(self.clone, self.coor[0], self.coor[1], (255,0,0), 2)
             cv2.imwrite('images\copy.png', self.clone)
             self.showImg('images\copy.png')
-    #Detect Vehicle
+    
+    ##edit -> detect Vehicle
     def startModel(self):
         vehicle_detection.vehicleDetect(self.open, self.allCoor)
 
 
-#Declare Widget
+#declare Widget
 root = Tk()
 app = Window(root)
 root.geometry('535x380')
-# root.title(title)
-
+# root.title(title)       -> dunno why not working :(
 root.mainloop()

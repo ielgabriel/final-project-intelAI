@@ -1,12 +1,12 @@
 #import libraries
 import cv2
-from matplotlib import pyplot as plt
 import numpy as np
+from matplotlib import pyplot as plt
 import imutils
 import easyocr
 
-def plateDetect():
-    img = cv2.imread('car.png')
+def plateDetect(loc):
+    img = cv2.imread(loc)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     plt.imshow(cv2.cvtColor(gray, cv2.COLOR_BGR2RGB))
     #noise reduction
