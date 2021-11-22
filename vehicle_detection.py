@@ -2,9 +2,6 @@
 import cv2
 import numpy as np
 from openvino.inference_engine import IECore
-#import extensions
-import plate_detection
-import time
 
 def vehicleDetect(loc, allCoor):
     #initiate inference engine
@@ -60,9 +57,18 @@ def vehicleDetect(loc, allCoor):
                ##detect collision line-block
                 isViolating = False
                 for coor in allCoor:
+
+                    if coor[0][1] < coor[1][1]:
+                            yRange = range(coor[0][1],coor[1][1])
+                    elif coor[1][1] < coor[0][1]:
+                        yRange = range(coor[1][1],coor[0][1])
+                    else:
+                        yRange = range(coor[0][1],coor[1][1] + 1)
+
                     for i in range(int(item[3]*width), int(item[5]*width)):
                         y = int(((coor[1][1] - coor[0][1]) * ((i - coor[0][0]) / (coor[1][0] - coor[0][0]))) + coor[0][1] )
-                        if (y == int(item[6]*height)) and (y in range(coor[0][1],coor[1][1])):
+
+                        if (y == int(item[6]*height)) and (y in yRange):
                             isViolating = True
                             break
                     if isViolating:
@@ -75,8 +81,6 @@ def vehicleDetect(loc, allCoor):
                         (int(item[5]*width), int(item[6]*height)),
                         (0,0,255), 3
                     )
-                    carImg = img[int(item[4]*height):int(item[6]*height),int(item[3]*width):int(item[5]*width)]
-                    plate_detection.plateDetect(carImg)
                 else:
                     cv2.rectangle(
                         img,
@@ -85,36 +89,11 @@ def vehicleDetect(loc, allCoor):
                         (0,255,0), 3
                     )
 
-
-                # for coor in allCoor:
-                    #check if any x or y coordinates inside the box
-                    # x = int((coor[1][0] - coor[0][0]) * ((item[6]*height - coor[0][1]) / (coor[1][1] - coor[0][1])) + coor[0][0] )
-                    # y = int((coor[1][1] - coor[0][1]) * ((item[5]*width - coor[0][0]) / (coor[1][0] - coor[0][0])) + coor[0][1] )
-                    # if (
-                    #     x in range(int(item[3]*width), int(item[5]*width)) or
-                    #     y in range(int(item[4]*height), int(item[6]*height))
-                    #     ) and (
-                    #     x in range(int(coor[0][0], int(coor[1][0]))) and
-                    #     y in range(int(coor[0][1], int(coor[1][1])))
-                    #     ):
-                    #     cv2.rectangle(
-                    #         img,
-                    #         (int(item[3]*width), int(item[4]*height)),
-                    #         (int(item[5]*width), int(item[6]*height)),
-                    #         (0,0,255), 3
-                    #     )
-                    # else:
-                    #     cv2.rectangle(
-                    #         img,
-                    #         (int(item[3]*width), int(item[4]*height)),
-                    #         (int(item[5]*width), int(item[6]*height)),
-                    #         (0,255,0), 3
-                    #     )
-
-
-
         ##display output window
         cv2.imshow('Output',img)
+        if cv2.waitKey(1) & 0xFF == ord('p'):
+            cv2.imwrite('images\pauseframe.png',img)
+            break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
