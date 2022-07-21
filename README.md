@@ -22,9 +22,9 @@ There are also some packages that we use, which is: openVINO (for integrating pr
 
 >#### Credits:
 > This project is made by:
-> - Carlos Huahean as AI Writer
-> - Juan Sihombing as AI Writer
-> - Kornelius Hutabarat as 
+> - Carlos Huahean as Project Writer
+> - Juan Sihombing as Project Writer
 > - Rijal Gabriel as Code Developer
 > - Samuel Silaban as Code Developer
-> - Sean Dorothy as 
+> - Sean Dorothy as Idea Developer
+> - Kornelius Hutabarat as Idea Developer
